@@ -14,8 +14,8 @@ module.exports = (params) => {
       req.session.visitcount++;
 
       return res.render('pages/index', {
-        pageTitle:   'Node.js  wolcome',
-        artworks:    await speakerService.getAllArtwork(),
+        pageTitle: 'Node.js  wolcome',
+        artworks: await speakerService.getAllArtwork(),
         topSpeakers: await speakerService.getList(),
       });
     } catch (e) {

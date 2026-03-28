@@ -3,10 +3,26 @@ const { check, validationResult } = require('express-validator');
 const router = express.Router();
 
 const validation = [
-  check('name').trim().isLength({ min: 3 }).escape().withMessage('Name is required'),
-  check('email').trim().isEmail().normalizeEmail().withMessage('Email is required'),
-  check('title').trim().isLength({ min: 3 }).escape().withMessage('Title is required'),
-  check('message').trim().isLength({ min: 3 }).escape().withMessage('Message is required'),
+  check('name')
+    .trim()
+    .isLength({ min: 3 })
+    .escape()
+    .withMessage('Name is required'),
+  check('email')
+    .trim()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Email is required'),
+  check('title')
+    .trim()
+    .isLength({ min: 3 })
+    .escape()
+    .withMessage('Title is required'),
+  check('message')
+    .trim()
+    .isLength({ min: 3 })
+    .escape()
+    .withMessage('Message is required'),
 ];
 
 module.exports = (params) => {
@@ -14,21 +30,21 @@ module.exports = (params) => {
 
   router.get('/', async (req, res, next) => {
     try {
-
       const errors = req.session.feedback ? req.session.feedback.errors : false;
-      const success = req.session.feedback ? req.session.feedback.success : false;
+      const success = req.session.feedback
+        ? req.session.feedback.success
+        : false;
       req.session.feedback = {};
 
       return res.render('pages/feedback', {
         pageTitle: 'Feedback',
         feedbacks: await feedbackService.getList(),
-        errors:    errors,
-        success:   success,
+        errors: errors,
+        success: success,
       });
     } catch (e) {
       return next(e);
     }
-
   });
 
   router.post('/', validation, async (req, res, next) => {
@@ -53,7 +69,6 @@ module.exports = (params) => {
     } catch (e) {
       return next(e);
     }
-
   });
 
   return router;
