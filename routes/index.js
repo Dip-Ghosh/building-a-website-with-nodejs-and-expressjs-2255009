@@ -6,18 +6,21 @@ const feedbackRouter = require('./feedback');
 module.exports = (params) => {
   const { speakerService } = params;
 
-  router.get('/', async (req, res) => {
-    if (!req.session.visitcount) {
-      req.session.visitcount = 0;
+  router.get('/', async (req, res, next) => {
+    try {
+      if (!req.session.visitcount) {
+        req.session.visitcount = 0;
+      }
+      req.session.visitcount++;
+
+      return res.render('pages/index', {
+        pageTitle:   'Node.js  wolcome',
+        artworks:    await speakerService.getAllArtwork(),
+        topSpeakers: await speakerService.getList(),
+      });
+    } catch (e) {
+      return next(createError(404, 'Speaker not found'));
     }
-    req.session.visitcount++;
-
-    res.render('pages/index', {
-      pageTitle:   'Node.js  wolcome',
-      artworks:    await speakerService.getAllArtwork(),
-      topSpeakers: await speakerService.getList(),
-    });
-
   });
 
   router.use('/speakers', speakerRouter(params));
